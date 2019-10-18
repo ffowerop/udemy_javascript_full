@@ -11,8 +11,12 @@ var appData = {
 
 var mandatoryExpenseItem = prompt("Введите обязательную статью расходов в этом месяце", "Advertising");
 var mandatoryItemPrice = prompt("Во сколько обойдется?", "18000");
-
 appData.expenses[mandatoryExpenseItem] = mandatoryItemPrice;
-alert("Ващ бюджет на один день составляет " + Number(appData.expenses[mandatoryExpenseItem]) / 30);
+
+mandatoryExpenseItem = prompt("Введите обязательную статью расходов в этом месяце", "Advertising");
+mandatoryItemPrice = prompt("Во сколько обойдется?", "18000");
+appData.expenses[mandatoryExpenseItem] = mandatoryItemPrice;
+
+alert("Ваш бюджет на один день составляет " + Number(appData.expenses[mandatoryExpenseItem]) / 30);
 
 console.log(appData);
