@@ -76,4 +76,33 @@ window.addEventListener('DOMContentLoaded', function() {
             setTimeout(updateClock, 1000);
         })();
     })('timer');
+    
+
+    /// POPUP WINDOW \\\
+
+    let popUpWindow = function(openButton, popupWindow, closeButton) {
+        openButton.addEventListener('click', function() {    
+            popupWindow.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            this.classList.add('more-splash');
+            //let self = this;
+            closeButton.addEventListener('click',function() {
+                popupWindow.style.display = 'none';
+                document.body.style.overflow = '';
+                openButton.classList.remove('more-splash');
+                this.removeEventListener('click', addEventListener);
+            });
+        });
+    };
+
+    let more = document.querySelector('.more');
+    let overlay = document.querySelector('.overlay');
+    let close = document.querySelector('.popup-close');
+    
+    popUpWindow(more, overlay, close);
+
+    let showInfoButtons = document.querySelectorAll('.description-btn');
+    showInfoButtons.forEach(function(button){
+        popUpWindow(button, overlay, close);
+    });
 });
