@@ -48,7 +48,7 @@ class Options {
         this._textAlign = textAlign;
     }
 
-    createDiv(text, parent) {
+    appendDiv(text, parent) {
         let div = document.createElement('div');
         div.style.height = this._height;
         div.style.width = this._width;
@@ -60,3 +60,6 @@ class Options {
         return div;
     }
 }
+
+let div = new Options('400px', '800px', 'grey', '40pt', 'center');
+div.appendDiv('Bla Bla Bla', document.body);
