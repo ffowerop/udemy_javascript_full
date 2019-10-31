@@ -86,11 +86,44 @@ window.addEventListener('DOMContentLoaded', function() {
             document.body.style.overflow = 'hidden';
             this.classList.add('more-splash');
             //let self = this;
+            let form = document.querySelector('form.main-form');
+            let popup = document.querySelector('.popup-form');
+            let tempHtml = popup.innerHTML;
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                let request = new XMLHttpRequest();
+                request.open('POST', 'server.php');
+                
+                let status = {
+                    load: 'loading',
+                    done: '<h1>Ваши данные успешно отправлены</h1>',
+                    error: 'something goes wrong',
+                };
+                request.setRequestHeader('Content-Type', 'application/json');
+                let formData = new FormData(form);
+                let formObj = {};
+                formData.forEach((key, value) => formObj[key] = value);
+                request.send(JSON.stringify(formObj));
+                let sendingStatus = document.createElement('div');
+                form.appendChild(sendingStatus);
+                request.addEventListener('readystatechange', function(event) {
+                    if (request.readyState < 4) {
+                        sendingStatus.textContent = status.load;
+                    } else if (request.readyState === 4 && request.status === 200) {
+                        popup.innerHTML = status.done;
+                    } else {
+                        sendingStatus.textContent = status.error;
+                    }
+                });
+            });
             closeButton.addEventListener('click',function() {
                 popupWindow.style.display = 'none';
                 document.body.style.overflow = '';
                 openButton.classList.remove('more-splash');
                 this.removeEventListener('click', addEventListener);
+                form.removeEventListener('submit', addEventListener);
+                popup = tempHtml;
             });
         });
     };
