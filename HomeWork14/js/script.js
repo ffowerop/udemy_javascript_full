@@ -84,6 +84,7 @@ window.addEventListener('DOMContentLoaded', function() {
     let popUpWindow = function(openButton, popupWindow, closeButton) {
 
         openButton.addEventListener('click', function() {
+            console.log('bbb' + Math.random());
             popupWindow.style.display = 'block';
             document.body.style.overflow = 'hidden';
             this.classList.add('more-splash');
@@ -93,9 +94,9 @@ window.addEventListener('DOMContentLoaded', function() {
             let sendingStatus = document.createElement('div');
             form.appendChild(sendingStatus);
             let succesMessage = document.createElement('div');
-            popup.appendChild(succesMessage);      
-
-            form.addEventListener('submit', function(event) {
+            popup.appendChild(succesMessage);    
+            
+            let listner = function (event) {
                 event.preventDefault();
 
                 
@@ -106,7 +107,7 @@ window.addEventListener('DOMContentLoaded', function() {
                     error: 'something goes wrong',
                 };
 
-                (new Promise(function(resolve, reject) {
+                new Promise(function(resolve, reject) {
 
                     let request = new XMLHttpRequest();
                     request.open('POST', 'server.php');
@@ -116,37 +117,42 @@ window.addEventListener('DOMContentLoaded', function() {
                     let formObj = {};
                     
                     formData.forEach((key, value) => formObj[key] = value);
-                    
-                    request.addEventListener('readystatechange', function(event) {
-                        if (request.readyState < 4) {
-                            resolve('d');                                
-                        } else if (request.readyState === 4 && request.status === 200) {
-                            resolve('l');
-                            
+                    console.log('ccc');
+                    request.addEventListener('load', function() {
+                        if (request.readyState === 4 && request.status === 200) {
+                            resolve();                            
                         } else {                                
                             reject();
                         }
                     });
                     request.send(JSON.stringify(formObj));
 
-                }))
+                })                
+                .then(() => {
+                    form.style.display = 'none';
+                    succesMessage.innerHTML = status.done;
+                    console.log('aaa' + Math.random());
+                })
+                .catch(() => sendingStatus.textContent = status.error)
+                .finally(() => document.querySelector('.popup-form__input').value = '');
+            };
 
-                .then(s => {if(s==='d') {sendingStatus.textContent = status.load;console.log(1);}})
-                .then(s => {if(s==='l') {form.style.display = 'none'; succesMessage.innerHTML = status.done;console.log(1); }})
-                
-                
-                .catch(() => sendingStatus.textContent = status.error);
-            });
+            form.addEventListener('submit', listner);
 
-            closeButton.addEventListener('click',function() {
+            closeButton.addEventListener('click',function buttonListner() {
+                
+                this.removeEventListener('click', buttonListner);
+                form.removeEventListener('submit', listner);
+                console.log(sendingStatus.textContent);
                 sendingStatus.textContent = '';
+                console.log(sendingStatus.textContent);
+                console.log(succesMessage.innerHTML);
                 succesMessage.innerHTML = '';
+                console.log(succesMessage.innerHTML);
                 form.style.display = 'block';
                 popupWindow.style.display = 'none';
                 document.body.style.overflow = '';
-                openButton.classList.remove('more-splash');
-                this.removeEventListener('click', addEventListener);
-                form.removeEventListener('submit', addEventListener);                
+                openButton.classList.remove('more-splash');                             
             });
 
         });
