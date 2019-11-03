@@ -206,4 +206,30 @@ window.addEventListener('DOMContentLoaded', function() {
         });
     }
     slider();
+
+    /// CALCULATOR
+    function calculator() {
+        const PRICE = 4000;
+        let total = document.getElementById('total');
+        total.textContent = '';
+        let select = document.getElementById('select');
+        let inputs = document.querySelectorAll('.counter-block-input');
+        const reCount = function(val1, val2, price, place) {
+            if (val1 && val2) {
+                total.textContent = val1 * val2 * PRICE * select.options[select.selectedIndex].value;
+            } else {
+                total.textContent = 0;
+            }
+        };
+        //select.addEventListener('change', () => {
+        inputs.forEach((input, i) => {
+            input.addEventListener('input', () => {
+                reCount(inputs[i].value, inputs[(i+1)%2].value);
+            });
+        });
+        select.addEventListener('change', () => {
+            reCount(inputs[0].value, inputs[1].value);
+        });
+    }
+    calculator();
 });
